@@ -33,11 +33,11 @@ export const useProductStore = defineStore("ProductStore", {
     },
   },
   actions: {
-    async fetchProducts(option) {
+    async fetchProducts() {
       const { $contentful } = useNuxtApp()
       const { items } = await $contentful.getEntries({
         content_type: 'product',
-        ...option
+        ...this.filters
       })
 
       this.products = items;

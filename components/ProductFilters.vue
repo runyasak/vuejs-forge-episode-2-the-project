@@ -1,11 +1,13 @@
 <script setup>
+import { watchDebounced } from '@vueuse/shared';
+
 const productStore = useProductStore();
 const filters = computed(() => productStore.filters);
 
-watch(filters, (query) => {
+watchDebounced(filters, (query) => {
   useRouter().replace({ query })
   productStore.fetchProducts()
-}, { deep: true })
+}, { deep: true, debounce: 500 })
 
 </script>
 <template>

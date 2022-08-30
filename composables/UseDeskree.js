@@ -114,7 +114,11 @@ export function useDeskree() {
     },
     async getCart() {
       // get the user's persisted cart from Deskree here
-      return [];
+      if (!loggedInUser.value || !tokenInLocalStorage.value) return;
+
+      const res = await dbRestRequest(`carts/${loggedInUser.value.cartId}`);
+      res.data.products = JSON.parse(res.data.products);
+      return res.data;
     },
   };
 

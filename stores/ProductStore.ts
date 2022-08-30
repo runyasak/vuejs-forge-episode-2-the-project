@@ -1,38 +1,14 @@
+import { Asset, Entry } from "contentful";
 import { defineStore, acceptHMRUpdate } from "pinia";
 
-export interface Product {
-  metadata: { tags: [] };
-  sys: {
-    space: unknown[];
-    id: string;
-    type: string;
-    createdAt: string;
-    updatedAt: string;
-    environment: unknown[];
-    revision: number;
-    contentType: unknown[];
-    locale: string;
-  };
-  fields: {
-    name: string;
-    summary: string;
-    price: number;
-    description: string;
-    image: {
-      fields: {
-        description: string;
-        file: {
-          url: string;
-          details: unknown;
-          fileName: string;
-          contentType: string;
-        };
-        title: string;
-      };
-    };
-    heatLevel: string;
-  };
+export interface ProductField {
+  name: string;
+  price: number;
+  image: Asset[];
+  heatLevel: string;
 }
+
+export type Product = Entry<ProductField>;
 
 export const useProductStore = defineStore("ProductStore", {
   state: () => {
@@ -55,7 +31,7 @@ export const useProductStore = defineStore("ProductStore", {
       /**
        * A single project to show all the details of
        */
-      singleProduct: null,
+      singleProduct: null as Entry<unknown> | null,
     };
   },
   getters: {
@@ -70,7 +46,7 @@ export const useProductStore = defineStore("ProductStore", {
   actions: {
     async fetchProducts() {
       const { $contentful } = useNuxtApp();
-      const { items } = await $contentful.getEntries({
+      const { items } = await $contentful.getEntries<ProductField>({
         content_type: "product",
         ...this.filters,
       });

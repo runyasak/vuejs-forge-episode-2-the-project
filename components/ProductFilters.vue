@@ -2,7 +2,10 @@
 const productStore = useProductStore();
 const filters = computed(() => productStore.filters);
 
-watch(filters, productStore.fetchProducts, { deep: true })
+watch(filters, (query) => {
+  useRouter().replace({ query })
+  productStore.fetchProducts()
+}, { deep: true })
 
 </script>
 <template>

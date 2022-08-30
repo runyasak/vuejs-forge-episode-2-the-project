@@ -43,10 +43,10 @@ export const useProductStore = defineStore("ProductStore", {
       return this.products;
     },
     async fetchProduct(id) {
-      const products = await this.fetchProducts();
-      this.singleProduct = products.find((p) => {
-        return p.sys.id === id;
-      });
+      const { $contentful } = useNuxtApp()
+      const res = await $contentful.getEntry(id)
+
+      this.singleProduct = res
       return this.singleProduct;
     },
   },

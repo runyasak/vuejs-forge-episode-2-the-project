@@ -33,10 +33,11 @@ export const useProductStore = defineStore("ProductStore", {
     },
   },
   actions: {
-    async fetchProducts() {
+    async fetchProducts(heatLevel) {
       const { $contentful } = useNuxtApp()
       const { items } = await $contentful.getEntries({
-        content_type: 'product'
+        content_type: 'product',
+        "fields.heatLevel": heatLevel
       })
 
       this.products = items;

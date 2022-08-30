@@ -27,11 +27,11 @@ defineProps<{
           </small>
         </h2>
         <p
-          class="text-sm max-h-5 overflow-ellipsis overflow-hidden whitespace-nowrap"
+          class="text-sm max-h-5 overflow-ellipsis overflow-hidden whitespace-nowrap mb-3"
         >
           {{ product.fields.summary }}
         </p>
-        <div class="card-actions justify-center mt-3">
+        <div class="card-actions justify-center mt-auto">
           <button class="btn btn-primary">View Item</button>
         </div>
       </div>

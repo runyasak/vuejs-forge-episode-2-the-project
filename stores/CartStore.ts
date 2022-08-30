@@ -1,3 +1,4 @@
+import { watchDebounced } from "@vueuse/core";
 import { Product } from "./ProductStore";
 
 export interface CartItem {
@@ -6,9 +7,22 @@ export interface CartItem {
 }
 
 export const useCartStore = defineStore("CartStore", () => {
+  const deskree = useDeskree();
+
   const items = ref<CartItem[]>([]);
 
   const taxRate = 0.1;
+
+  watchDebounced(
+    items,
+    (state) => {
+      deskree.user.updateCart(state);
+    },
+    {
+      debounce: 500,
+      deep: true,
+    }
+  );
 
   const totalCount = computed(() =>
     items.value.reduce((acc, cur) => acc + cur.amount, 0)

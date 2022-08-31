@@ -1,13 +1,41 @@
+<script lang="ts" setup>
+import { useAsyncState } from "@vueuse/core";
+
+const props = defineProps({ productId: String });
+
+const api = useDeskree();
+
+const { state: reviews } = useAsyncState(
+  () => api.reviews.get(props.productId),
+  null
+);
+
+const reviewsCount = computed(() => reviews.value?.data.length || 0);
+
+const averageRating = computed(() => {
+  if (!reviews.value) {
+    return 0;
+  }
+
+  const count = reviews.value.data.length;
+  const ratingSum = reviews.value.data
+    .map((i: any) => i.attributes.rating)
+    .reduce((a: number, b: number) => a + b, 0);
+
+  return (ratingSum / count).toFixed(1);
+});
+</script>
+
 <template>
   <div class="flex flex-col gap-4">
     <span class="text-2xl">Customer Reviews and Ratings</span>
     <div class="flex gap-8 items-center">
       <div class="p-6 border-2 border-primary rounded-xl h-fit">
         <div class="whitespace-nowrap">
-          <span class="text-4xl"> 3.8 </span>
+          <span class="text-4xl"> {{ averageRating }} </span>
           out of <span class="text-4xl">5</span>
         </div>
-        <span>(9 Reviews)</span>
+        <span>({{ reviewsCount }} Reviews)</span>
       </div>
       <div class="flex flex-col gap-2 flex-1">
         <div class="flex gap-4 items-center">

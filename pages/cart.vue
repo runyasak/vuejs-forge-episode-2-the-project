@@ -1,11 +1,24 @@
 <script lang="ts" setup>
 const selected = ref<string[]>([]);
 const checkAll = ref();
+const loading = ref(false);
 
 const cartStore = useCartStore();
 
 const handleCheckout = () => {
-  console.log("checking out");
+  loading.value = true;
+  $fetch("/api/cart", {
+    method: "POST",
+    body: {
+      products: cartStore.items,
+    },
+  })
+    .then((res) => {
+      if (res.url) {
+        window.location = res.url as (string | Location) & Location;
+      }
+    })
+    .finally(() => (loading.value = false));
 };
 
 const handleRemoveSelected = () => {
@@ -124,9 +137,9 @@ const handleRemoveSelected = () => {
               </li>
             </ul>
             <div class="card-actions justify-end w-full">
-              <button class="btn btn-primary w-full" @click="handleCheckout">
+              <AppButton @click="handleCheckout" :loading="loading">
                 Checkout
-              </button>
+              </AppButton>
             </div>
           </div>
         </div>

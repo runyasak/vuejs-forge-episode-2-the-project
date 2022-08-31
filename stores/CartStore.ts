@@ -56,6 +56,8 @@ export const useCartStore = defineStore("CartStore", () => {
     )
   );
 
+  const taxTotal = computed(() => subtotal.value * taxRate);
+
   const grandTotal = computed(() => taxTotal.value + subtotal.value);
 
   const isEmpty = computed(() => items.value.length === 0);
@@ -78,7 +80,9 @@ export const useCartStore = defineStore("CartStore", () => {
     );
   };
 
-  const taxTotal = computed(() => subtotal.value * taxRate);
+  const reset = () => {
+    items.value = [];
+  };
 
   return {
     items,
@@ -88,9 +92,11 @@ export const useCartStore = defineStore("CartStore", () => {
     taxRate,
     isEmpty,
     loading,
+    isFirstLoad,
     taxTotal,
     addItem,
     removeItems,
+    reset,
   };
 });
 

@@ -25,8 +25,9 @@ function handleAddToCart(product) {
   useAlertsStore().success(product.fields.name + " added to cart");
 }
 </script>
+
 <template>
-  <div class="mt-10 max-w-6xl mx-auto">
+  <div class="p-10 max-w-6xl mx-auto">
     <div v-if="product">
       <div class="sm:flex">
         <img
@@ -44,12 +45,12 @@ function handleAddToCart(product) {
             <p>{{ product.fields.summary }}</p>
           </div>
 
-          <hr class="my-4" />
-
           <div class="prose mb-5" v-html="description" />
           <button class="btn btn-primary" @click="handleAddToCart(product)">
             Add to cart
           </button>
+
+          <hr class="my-10" />
 
           <ProductReviews :productId="product.sys.id" />
         </div>

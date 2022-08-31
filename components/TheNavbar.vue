@@ -14,7 +14,7 @@ const loggedInUser = computed(() => deskree.loggedInUser.value);
     <!-- Right Side -->
     <div class="flex-none">
       <div class="dropdown dropdown-end">
-        <CartIcon :loading="false" :count="cartStore.totalCount" />
+        <CartIcon :loading="cartStore.loading" :count="cartStore.totalCount" />
         <div
           tabindex="0"
           class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"

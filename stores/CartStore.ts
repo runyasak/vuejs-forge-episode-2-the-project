@@ -11,18 +11,39 @@ export const useCartStore = defineStore("CartStore", () => {
 
   const items = ref<CartItem[]>([]);
 
+  const isFirstLoad = ref(false);
+
+  const loading = ref(false);
+
   const taxRate = 0.1;
 
   watchDebounced(
     items,
-    (state) => {
-      deskree.user.updateCart(state);
+    () => {
+      if (isFirstLoad.value) return;
+      if (!deskree.user.get()) return;
+
+      deskree.user.updateCart(items.value);
     },
     {
       debounce: 500,
       deep: true,
     }
   );
+
+  deskree.auth.onAuthStateChange(async () => {
+    try {
+      isFirstLoad.value = true;
+      loading.value = true;
+      const res = await deskree.user.getCart();
+      res.products.forEach((cart: CartItem) => addItem(cart.item, cart.amount));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      loading.value = false;
+      setTimeout(() => (isFirstLoad.value = false), 1000);
+    }
+  });
 
   const totalCount = computed(() =>
     items.value.reduce((acc, cur) => acc + cur.amount, 0)
@@ -39,15 +60,15 @@ export const useCartStore = defineStore("CartStore", () => {
 
   const isEmpty = computed(() => items.value.length === 0);
 
-  const addItem = (newProduct: Product, count = 1) => {
+  const addItem = (newProduct: Product, amount = 1) => {
     const existingItem = items.value.find(
       ({ item }) => item.sys.id === newProduct.sys.id
     );
 
     if (existingItem) {
-      existingItem.amount += count;
+      existingItem.amount += amount;
     } else {
-      items.value.push({ item: newProduct, amount: 1 });
+      items.value.push({ item: newProduct, amount });
     }
   };
 
@@ -66,6 +87,7 @@ export const useCartStore = defineStore("CartStore", () => {
     grandTotal,
     taxRate,
     isEmpty,
+    loading,
     taxTotal,
     addItem,
     removeItems,

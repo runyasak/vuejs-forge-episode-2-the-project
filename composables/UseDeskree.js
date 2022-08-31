@@ -128,6 +128,15 @@ export function useDeskree() {
   const reviews = {
     get(productId) {
       // make request to get reviews for a product here
+      const where = [
+        {
+          attribute: 'productId',
+          operator: '=',
+          value: productId
+        }
+      ]
+
+      return dbRestRequest(`/reviews?where=${JSON.stringify(where)}`);
     },
     submit({ text, rating, title, product_id }) {
       // make request to add a new review here

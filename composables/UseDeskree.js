@@ -138,8 +138,13 @@ export function useDeskree() {
 
       return dbRestRequest(`/reviews?where=${JSON.stringify(where)}`);
     },
-    submit({ text, rating, title, product_id }) {
-      // make request to add a new review here
+    submit({ text, rating, title, productId }) {
+      return dbRestRequest("/reviews", "POST", {
+        text,
+        rating: Number(rating),
+        title,
+        productId,
+      });
     },
   };
 

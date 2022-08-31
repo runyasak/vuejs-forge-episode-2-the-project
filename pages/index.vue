@@ -1,14 +1,14 @@
 <script setup>
 const productStore = useProductStore();
-const loading = ref(false)
+const loading = ref(false);
 useAsyncData("products", async () => {
   try {
-    loading.value = true
-    await productStore.fetchProducts() 
+    loading.value = true;
+    await productStore.fetchProducts();
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 });
 </script>
@@ -19,7 +19,8 @@ useAsyncData("products", async () => {
     <div class="flex items-end justify-end mt-10 px-10 gap-2">
       <AppSpinner
         class="mb-2 transition-opacity opacity-0 duration-500 ease-in-out"
-        :class="{'opacity-100': loading}">
+        :class="{ 'opacity-100': loading }"
+      >
       </AppSpinner>
       <ProductFilters />
     </div>
